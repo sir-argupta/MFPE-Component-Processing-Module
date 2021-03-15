@@ -75,7 +75,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				
 				<configuration>
-					<release>11</release>
+					
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

@@ -11,7 +11,7 @@ phases:
     commands:
       - echo "Entered build phase"
       # project name local
-      - cd MFPE-Component-Processing-Module-main
+     
       - mvn compile
       - mvn clean package -Dmaven.test.skip=true
       - echo " building docker image"
@@ -24,4 +24,4 @@ phases:
     - printf '[{"name":"pas-auth-new-container","imageUri":"%s"}]' 942605225521.dkr.ecr.us-east-1.amazonaws.com/pod-3-return-order-repository:pasauthtag > taskdefinition.json
 artifacts:
   files:
-    - MFPE-Component-Processing-Module-main/taskdefinition.json
+    - taskdefinition.json

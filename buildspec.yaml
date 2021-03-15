@@ -15,8 +15,8 @@ phases:
       - mvn compile
       - mvn clean package -Dmaven.test.skip=true
       - echo " building docker image"
-      - docker build -t service/authapps .
-      - docker tag service/authapps 942605225521.dkr.ecr.us-east-1.amazonaws.com/pod-3-return-order-repository:pasauthtag
+      - docker build -t sirargupta/compapps .
+      - docker tag sirargupta/compapps 942605225521.dkr.ecr.us-east-1.amazonaws.com/pod-3-return-order-repository:pasauthtag
   post_build:
     commands:
     - echo "Entered the post-build phase"

@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:15-oracle
 
 ADD target/componentProcessModule-0.0.1-SNAPSHOT.jar Comp-app.jar
 EXPOSE 8081

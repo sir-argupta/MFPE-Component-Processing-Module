@@ -2,26 +2,29 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      docker: 18
+      java: corretto11
   pre_build:
     commands:
-      - echo "Entered the pre-build phase"
-      - $(aws ecr get-login  --no-include-email --region us-east-1)
+    - echo Logging in to Amazon ECR...
+    - aws --version
+    - $(aws ecr get-login-password --region us-east-1)
+    - TAG="$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+    - IMAGE_URI=${REPOSITORY_URI}:${TAG}
   build:
     commands:
-      - echo "Entered build phase"
-      # project name local
-      - cd MFPE-Component-Processing-Module-main
-      - mvn compile
-      - mvn clean package -Dmaven.test.skip=true
-      - echo " building docker image"
-      - docker build -t sirargupta/comp-procress .
-      - docker tag sirargupta/comp-procress 942605225521.dkr.ecr.us-east-1.amazonaws.com/pod-3-return-order-repository:pasauthtag
+    - echo Build started on `date`
+    - echo $IMAGE_URI
+    - mvn clean package -Ddockerfile.skip
+    - docker build --tag $IMAGE_URI .
   post_build:
     commands:
-    - echo "Entered the post-build phase"
-    - docker push 942605225521.dkr.ecr.us-east-1.amazonaws.com/pod-3-return-order-repository:pasauthtag
-    - printf '[{"name":"pas-auth-new-container","imageUri":"%s"}]' 942605225521.dkr.ecr.us-east-1.amazonaws.com/pod-3-return-order-repository:pasauthtag > taskdefinition.json
+    - printenv
+    - echo Build completed on `date`
+    - echo $(docker images)
+    - echo Pushing docker image
+    - docker push $IMAGE_URI
+    - echo push completed
+    - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $IMAGE_URI > imagedefinitions.json
 artifacts:
   files:
-    - MFPE-Component-Processing-Module-main/taskdefinition.json
+  - imagedefinitions.json
